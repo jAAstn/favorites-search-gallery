@@ -1,10 +1,10 @@
-import { getIdFromThumb, getImageFromThumb } from "@/lib/thumb/thumbs";
+import { getImageFromThumb, parseIdFromThumb } from "@/lib/thumb/thumbs";
 import { Post } from "@/types/api";
 import { SerializedFavorite } from "@/types/favorite";
-import { chain } from "@/utils/function";
+import { chain } from "@/utils/pure/function";
 import { decompressPreviewSource } from "@/lib/media/url_compressor";
 import { getTagsFromThumb } from "@/lib/thumb/tag";
-import { removeExtraWhiteSpace } from "@/utils/string/format";
+import { removeExtraWhiteSpace } from "@/utils/pure/string";
 
 export function createPost(source: HTMLElement | SerializedFavorite): Post {
   return source instanceof HTMLElement ? createPostFromThumb(source) : createPostFromRecord(source);
@@ -15,7 +15,7 @@ export function clearPost(post: Post): void {
 }
 
 function createPostFromThumb(thumb: HTMLElement): Post {
-  const post = createEmptyPost(getIdFromThumb(thumb));
+  const post = createEmptyPost(parseIdFromThumb(thumb));
   const image = getImageFromThumb(thumb);
 
   if (image === null) {

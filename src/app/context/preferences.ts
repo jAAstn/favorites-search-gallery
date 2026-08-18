@@ -1,14 +1,15 @@
-import { FeatureNamespaced, HighlightStyle, Layout, PerformanceProfile, PostOverlayMode } from "@/types/app";
+import { FeatureNamespace, HighlightStyle, Layout, PerformanceProfile, PostOverlayMode } from "@/types/app";
 import { ON_DESKTOP_DEVICE, ON_MOBILE_DEVICE } from "@/lib/environment";
 import { Rating, SortKey } from "@/types/search";
+import { ActionBarMode } from "@/lib/thumb/action_bar/types";
 import { FavoritesDrawerView } from "@/types/favorite";
 import { Preference } from "@/lib/storage/preference";
 import { Theme } from "@/lib/ui/theme/themes";
-import { getCookie } from "@/utils/browser/cookie";
+import { getCookie } from "@/utils/platform/browser";
 
 export const Preferences = {
   app: {
-    performanceProfile: new Preference<PerformanceProfile>("appPerformanceProfile", "normal"),
+    performanceProfile: new Preference<PerformanceProfile>("appPerformanceProfile", ON_MOBILE_DEVICE ? "medium" : "normal"),
     gradient: new Preference("appGradient", false),
     theme: new Preference<Theme>("appTheme", "native"),
     darkMode: new Preference<boolean>("appDarkMode", getCookie("theme", "") === "dark"),
@@ -17,15 +18,17 @@ export const Preferences = {
   },
   favorites: {
     allowedRatings: new Preference<Rating>("favoritesAllowedRatings", 7),
-    columnCount: new Preference("favoritesColumnCount", ON_MOBILE_DEVICE ? 3 : 5),
+    columnCount: new Preference("favoritesColumnCount", ON_MOBILE_DEVICE ? 2 : 5),
+    postActionBar: new Preference<ActionBarMode>("favoritesPostActionBar", ON_MOBILE_DEVICE ? "off" : "hover"),
+    postActionBarButtons: new Preference("favoritesPostActionBarButtons", 1),
     downloadBatchSize: new Preference("favoritesDownloadBatchSize", 100),
     downloadFilenameFormat: new Preference("favoritesDownloadFilenameFormat", 3),
     drawerActiveView: new Preference<FavoritesDrawerView>("favoritesDrawerActiveView", "settings"),
     drawerOpen: new Preference("favoritesDrawerOpen", false),
     excludeBlacklist: new Preference("favoritesExcludeBlacklist", false),
     headerEnabled: new Preference("favoritesHeaderEnabled", true),
-    hintsEnabled: new Preference("favoritesHintsEnabled", true),
-    infiniteScroll: new Preference("favoritesInfiniteScroll", false),
+    hintsEnabled: new Preference("favoritesHintsEnabled", ON_DESKTOP_DEVICE),
+    infiniteScroll: new Preference("favoritesInfiniteScroll", ON_MOBILE_DEVICE),
     layout: new Preference<Layout>("favoritesLayout", "column"),
     newFavoriteHighlight: new Preference<HighlightStyle>("favoritesNewFavoriteHighlight", "border"),
     deletingAllowed: new Preference("favoritesDeletingAllowed", false),
@@ -64,9 +67,11 @@ export const Preferences = {
     galleryFavoriteStyle: new Preference<HighlightStyle>("postListGalleryFavoriteStyle", "border"),
     layout: new Preference<Layout>("postListLayout", "column"),
     infiniteScroll: new Preference("postListInfiniteScroll", false),
+    postActionBar: new Preference<ActionBarMode>("postListPostActionBar", ON_MOBILE_DEVICE ? "off" : "hover"),
+    postActionBarButtons: new Preference("postListPostActionBarButtons", 3),
     rowHeight: new Preference("postListRowHeight", 7),
     settingsCollapsed: new Preference("postListSettingsCollapsed", false),
     tooltipEnabled: new Preference("postListTooltipEnabled", false),
     upscaleThumbs: new Preference("postListUpscaleThumbs", ON_DESKTOP_DEVICE)
   }
-} satisfies FeatureNamespaced;
+} satisfies FeatureNamespace;

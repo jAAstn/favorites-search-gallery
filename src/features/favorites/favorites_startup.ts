@@ -5,13 +5,14 @@ import * as FavoritesLoadFlow from "@/features/favorites/flows/load_flow";
 import * as FavoritesModel from "@/features/favorites/model/favorites_model";
 import * as FavoritesMouseFlow from "@/features/favorites/flows/mouse_flow";
 import * as FavoritesResetFlow from "@/features/favorites/flows/reset_flow";
-import * as FavoritesSearchBox from "@/features/favorites/control/favorites_search_box";
+import * as FavoritesSearchBox from "@/features/favorites/control/toolbar/favorites_search_box";
 import * as FavoritesSearchFlow from "@/features/favorites/flows/search_flow";
-import * as FavoritesSettings from "@/features/favorites/control/desktop/settings/settings";
+import * as FavoritesSettings from "@/features/favorites/control/settings/settings";
 import * as FavoritesSnippets from "@/features/favorites/features/snippets/snippets";
-import * as FavoritesToolbar from "@/features/favorites/control/desktop/toolbar";
+import * as FavoritesToolbar from "@/features/favorites/control/toolbar/toolbar";
 import * as FavoritesView from "@/features/favorites/view/favorites_view";
-import { ON_DESKTOP_DEVICE, ON_FAVORITES_PAGE, ON_POST_LIST_PAGE } from "@/lib/environment";
+import { ON_DESKTOP_DEVICE, ON_FAVORITES_PAGE, ON_FIRST_FAVORITES_PAGE, ON_POST_LIST_PAGE } from "@/lib/environment";
+import { markActionBarFavorited, markActionBarUnfavorited } from "@/lib/thumb/action_bar/toggles";
 import { DomEvents } from "@/app/dom/events";
 import { Events } from "@/app/channels/events";
 import { FeatureBridge } from "@/app/channels/feature_bridge";
@@ -45,7 +46,9 @@ function start(): void {
   FavoritesView.removeOriginalUnusedScripts();
   deferPostPageFetchesUntil(Events.favorites.favoritesLoaded.wait());
   FavoritesView.showSkeleton();
-  FavoritesLoadFlow.loadAllFavorites(FavoritesView.firstPageFavorites());
+  const nativeFavorites = FavoritesView.takeNativeFavorites();
+
+  FavoritesLoadFlow.loadAllFavorites(ON_FIRST_FAVORITES_PAGE ? nativeFavorites : undefined);
 }
 
 function setupModel(): void {
@@ -75,10 +78,7 @@ function setupView(): void {
 
 function setupControl(): void {
   FavoritesSearchBox.setup();
-
-  if (ON_DESKTOP_DEVICE) {
-    FavoritesToolbar.setup();
-  }
+  FavoritesToolbar.setup();
 }
 
 function setupSubFeatures(): void {
@@ -117,6 +117,8 @@ function subscribeToEvents(): void {
   Events.postOverlay.addTagToSearch.on(FavoritesSearchBox.append);
   Events.postOverlay.excludeTagFromSearch.on(FavoritesSearchBox.exclude);
   Events.app.favoriteRemoved.on(FavoritesModel.deleteStoredFavorite);
+  Events.app.favoriteAdded.on(markActionBarFavorited);
+  Events.app.favoriteRemoved.on(markActionBarUnfavorited);
   Events.app.hotkeyPressed.on(FavoritesKeyFlow.handleHotkey);
 }
 

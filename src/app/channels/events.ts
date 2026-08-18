@@ -1,8 +1,7 @@
-import { FeatureNamespaced, GalleryMenuAction } from "@/types/app";
-import { Emitter } from "@/lib/communication/emitter";
+import { Emitter, StickyEmitter } from "@/lib/communication/emitter";
+import { FeatureNamespace, GalleryMenuAction } from "@/types/app";
 import { Favorite } from "@/types/favorite";
 import { PostList } from "@/features/post_list_navigator/types/post_list_page";
-import { StickyEmitter } from "@/lib/communication/sticky_emitter";
 import { TagCategoryMap } from "@/types/search";
 
 export const Events = {
@@ -53,4 +52,4 @@ export const Events = {
     moreResultsAdded: new Emitter<HTMLElement[]>(),
     pageChanged: new Emitter<HTMLElement[]>()
   }
-} satisfies FeatureNamespaced;
+} satisfies FeatureNamespace;

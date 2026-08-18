@@ -10,7 +10,7 @@ import { ContentDisplayOptions } from "@/types/ui";
 import { Favorite } from "@/types/favorite";
 import { FavoritesViewDependencies } from "@/features/favorites/types/types";
 import { buildFavoriteElementTemplate } from "@/features/favorites/types/favorite_element_template";
-import { doNothing } from "@/utils/function";
+import { doNothing } from "@/utils/pure/function";
 import { scrollToTop } from "@/lib/thumb/thumbs";
 
 let onContentReplaced: () => void = doNothing;
@@ -51,7 +51,7 @@ export const showSkeleton = (): void => ContentTiler.tile(FavoritesSkeleton.buil
 
 export { changeLayout } from "@/app/layout/content_tiler";
 export { collectAspectRatios } from "@/features/favorites/view/skeleton/skeleton";
-export { firstPageFavorites, removeOriginalUnusedScripts } from "@/features/favorites/view/native_page_cleaner";
+export { takeNativeFavorites, removeOriginalUnusedScripts } from "@/features/favorites/view/native_page_cleaner";
 export { togglePaginator, isGotoPagePopoverTarget, closeGotoPagePopover, buildPaginator, updatePaginator } from "@/features/favorites/view/pagination_renderer";
 export { toggle as toggleDrawer } from "@/features/favorites/view/shell/drawer";
 export { setStatus, setTemporaryStatus, setResultsCount as setMatchCount, updateFetchStatus, notifyNewFavoritesFound, setExpectedTotalFavoritesCount } from "@/features/favorites/view/status/status";

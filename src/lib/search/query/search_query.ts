@@ -1,7 +1,7 @@
 import { buildSearchTerms, parseTermGroups, sortSearchTerms } from "@/lib/search/parsers/search_term_group_parser";
 import { AbstractSearchTerm } from "@/lib/search/terms/abstract_search_term";
 import { Searchable } from "@/types/search";
-import { isEmptyString } from "@/utils/string/query";
+import { isEmptyString } from "@/utils/pure/string";
 
 export class SearchQuery<T extends Searchable> {
   public readonly raw: string;
@@ -25,11 +25,11 @@ export class SearchQuery<T extends Searchable> {
   }
 
   public get negatedTerms(): Set<string> {
-    return new Set(this.andTerms.filter(searchTerm => searchTerm.negated).map(searchTerm => searchTerm.value));
+    return new Set(this.andTerms.filter(searchTerm => searchTerm.isNegated).map(searchTerm => searchTerm.value));
   }
 
   public get requiredTerms(): string[] {
-    return this.andTerms.filter(searchTerm => !searchTerm.negated).map(searchTerm => searchTerm.value);
+    return this.andTerms.filter(searchTerm => !searchTerm.isNegated).map(searchTerm => searchTerm.value);
   }
 
   public get orGroupTerms(): string[][] {

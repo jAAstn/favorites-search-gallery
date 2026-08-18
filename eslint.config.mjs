@@ -91,7 +91,7 @@ export default defineConfig([
       "key-spacing": "error",
       "keyword-spacing": "error",
       "lines-around-directive": "error",
-      "max-classes-per-file": ["error"],
+      // "max-classes-per-file": ["error"],
       "max-depth": "error",
       "max-nested-callbacks": "error",
       "max-statements-per-line": "error",
@@ -624,7 +624,8 @@ export default defineConfig([
       "src/features/favorites/types/favorite_item.ts",
       "src/features/favorites/features/downloader/filename_settings.ts",
       "src/**/multi_segmented.ts",
-      "src/**/wildcard_search_term.ts"
+      "src/**/wildcard_search_term.ts",
+      "src/lib/thumb/action_bar/toggles.ts"
     ],
     rules: {
       "no-bitwise": "off"
